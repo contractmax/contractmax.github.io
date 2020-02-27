@@ -1,0 +1,80 @@
+
+
+/*********************************************************************/
+
+.contenttitle { cursor: pointer; }
+
+a {
+	color: #37cd8c;
+	text-decoration: none; /* Отменяем подчеркивание у ссылки */
+	}
+
+td.img {
+	text-align: center;
+	}
+	
+h1 {
+	font-family:"Verdana";
+	font-size: 20px;
+    font-weight: bold;	
+	color: #2098df;
+	}
+
+span.t1 {
+	font-weight: bold; 
+	font-family:"Verdana";
+	font-size: 28px;	
+    color: #37cd8c; /* Цвет текста */
+	padding: 3px; /* Поля вокруг текста */
+	transition:all 0.1s linear; 
+	}
+	
+span.t2 {
+	background: #37cd8c; /* Цвет фона под заголовком */
+    color: #ffffff; /* Цвет текста */
+    padding: 3px; /* Поля вокруг текста */
+	font-weight: bold;
+	font-family:"Verdana";
+	font-size: 28px;	
+    transition:all 0.3s linear;
+	}
+	
+span.t2:hover{
+	background: #f9794c; /* Цвет фона под заголовком */
+	color: #ffffff; /* Цвет текста */
+    padding: 3px; /* Поля вокруг текста */
+	font-weight: bold;
+	font-family:"Verdana";
+	font-size: 28px;		
+	}
+	
+table.contenttitle {
+	width: 500px; /* Ширина таблицы */
+	margin: auto; /* Выравниваем таблицу по центру окна  */
+	border-collapse: collapse;
+	font-family:"Verdana";
+	font-size: 14px;	
+	line-height: 0px; 
+	}
+  
+td.title {
+	text-align: center;
+	}	
+    
+td.line{
+	font-family:"Verdana";
+	font-size: 12px;
+    font-weight: bold;	
+	color: #37cd8c;
+	transition:all 0.2s linear;
+	}	
+		
+td.line:hover {
+	color: #ffffff;
+	background: #444444;
+	transition: 0.2s linear; 
+	font-size: 14px;
+	}	
+	
+	
+/*********************************************************************/
