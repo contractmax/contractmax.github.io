@@ -29,6 +29,12 @@ document.location.href = "index.html";
 });			
 		
 		
+$('#ak').on ('click', function(){
+document.location.href = "ak/index.html";
+});				
+		
+		
+		
 
 	
 
