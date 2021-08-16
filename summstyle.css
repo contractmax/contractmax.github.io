@@ -1,6 +1,6 @@
 a {
 	
-	color: #37cd8c;
+	color: #6699FF;
 	text-decoration: none; /* Отменяем подчеркивание у ссылки */
 }
 
@@ -48,7 +48,7 @@ table#tab1 th {
 	font-size: 16px;
     font-weight: bold;	
 	color: #ffffff;
-	background: #37cd8c;
+	background: #6699FF;
 			}
 
 table#tab1 tr {
@@ -78,12 +78,12 @@ span.t1 {
 	font-weight: bold; 
 	font-family:"Verdana";
 	font-size: 28px;	
-    color: #37cd8c; /* Цвет текста */
+    color: #6699FF; /* Цвет текста */
 	padding: 3px; /* Поля вокруг текста */
 	}
 
 span.t2 {
-	background: #37cd8c; /* Цвет фона под заголовком */
+	background: #6699FF; /* Цвет фона под заголовком */
     color: #ffffff; /* Цвет текста */
     padding: 3px; /* Поля вокруг текста */
 	font-weight: bold;
@@ -117,7 +117,7 @@ td.line{
 	font-family:"Verdana";
 	font-size: 12px;
     font-weight: bold;	
-	color: #37cd8c;
+	color: #6699FF;
 	transition:all 0.2s linear;
 	}		
    
@@ -147,7 +147,7 @@ input {
 	font-family:"Verdana";
 	font-size: 14px;
 	text-align: center;
-	background: #37cd8c;
+	background: #6699FF;
 	font-weight: 600;
 }
 

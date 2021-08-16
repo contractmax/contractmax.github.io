@@ -139,6 +139,52 @@ function FloatToSamplesInWordsRus(fAmount)
 
 //////////////////////////////////////////////////////////////////////////////
 
+function Kopcislo(fAmount)
+{
+    var fInt = Math.floor(fAmount + 0.005);
+    var fDec = Math.floor(((fAmount - fInt) * 100) + 0.5);
+
+    var arrRet = [];
+    var iOrder = 0;
+    var arrThousands = [];
+    for (; fInt > 0.9999; fInt/=1000) {
+        arrThousands.push(Math.floor(fInt % 1000));
+    }
+    if (arrThousands.length == 0) {
+        arrThousands.push(0);
+    }
+
+    function PushToRes(strVal) {
+        //arrRet.push(strVal);
+    }
+
+    for (var iSouth = arrThousands.length-1; iSouth >= 0; --iSouth) {
+        if (arrThousands[iSouth] == 0) {
+            continue;
+        }
+        From0To999(arrThousands[iSouth], mapOrders[iSouth], PushToRes, PushToRes);
+    }
+
+    if (arrThousands[0] == 0) {
+        //  Handle zero amount
+        if (arrThousands.length == 1) {
+            PushToRes(Value(0, mapOrders[0]._Gender));
+        }
+
+        var nCurrState = 2;
+        PushToRes(mapOrders[0]._arrStates[nCurrState]);
+    }
+
+    if (arrRet.length > 0) {
+        // Capitalize first letter
+        arrRet[0] = arrRet[0].match(/^(.)/)[1].toLocaleUpperCase() + arrRet[0].match(/^.(.*)$/)[1];
+    }
+
+    arrRet.push((fDec < 10) ? ("0" + fDec) : ("" + fDec));
+    From0To999(fDec, objKop, function() {}, PushToRes);
+
+    return arrRet.join(" ");
+}
 
 	
 function rubnew(fAmount)
@@ -193,6 +239,58 @@ function rubnew(fAmount)
 	
 }
 
+function Kopnew(fAmount)
+{
+    var fInt = Math.floor(fAmount + 0.005);
+    var fDec = Math.floor(((fAmount - fInt) * 100) + 0.5);
+
+    var arrRet = [];
+    var iOrder = 0;
+    var arrThousands = [];
+    for (; fInt > 0.9999; fInt/=1000) {
+        arrThousands.push(Math.floor(fInt % 1000));
+    }
+    if (arrThousands.length == 0) {
+        arrThousands.push(0);
+    }
+
+    function PushToRes(strVal) {
+        arrRet.push(strVal);
+    }
+
+    for (var iSouth = arrThousands.length-1; iSouth >= 0; --iSouth) {
+        if (arrThousands[iSouth] == 0) {
+            continue;
+        }
+        From0To999(arrThousands[iSouth], mapOrders[iSouth], PushToRes, PushToRes);
+    }
+
+    if (arrThousands[0] == 0) {
+        //  Handle zero amount
+        if (arrThousands.length == 1) {
+            PushToRes(Value(0, mapOrders[0]._Gender));
+        }
+
+        var nCurrState = 2;
+        PushToRes(mapOrders[0]._arrStates[nCurrState]);
+    }
+
+    if (arrRet.length > 0) {
+        // Capitalize first letter
+        arrRet[0] = arrRet[0].match(/^(.)/)[1].toLocaleUpperCase() + arrRet[0].match(/^.(.*)$/)[1];
+    }
+
+    arrRet.push((fDec < 10) ? ("0" + fDec) : ("" + fDec));
+    
+	From0To999(fDec, objKop, function() {}, PushToRes);
+
+    arrRet.reverse();
+		
+	return arrRet[0];
+		
+	
+}
+
 	
 
 	
@@ -202,30 +300,42 @@ function rubnew(fAmount)
 	
 	if ($('#sel1').val() == "chisloprop") {
 	var sumpropmas = [];
-	sumpropmas [0] = parseFloat(chislo).toFixed(2).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');	
+			
+	sumpropmas [0] = String (((Math.trunc(parseFloat(chislo).toFixed(2))))).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
 	sumpropmas [1] = rubnew(parseFloat(chislo));
-	sumpropmas [2] = "("+ FloatToSamplesInWordsRus(parseFloat(chislo)) + ")";
+	sumpropmas [2] = Kopcislo(parseFloat(chislo));
+	sumpropmas [3] = Kopnew(parseFloat(chislo)); 
+	sumpropmas [4] = "("+ FloatToSamplesInWordsRus(parseFloat(chislo)) + ")";
 	return sumpropmas.join(" ");
-	}
+		}
 	
 	if ($('#sel1').val() == "notnds") {
 	var gsmas = [];
-	gsmas [0] = parseFloat(chislo).toFixed(2).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');	
+	gsmas [0] = String (((Math.trunc(parseFloat(chislo).toFixed(2))))).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
 	gsmas [1] = rubnew(parseFloat(chislo));
-	gsmas [2] = "("+ FloatToSamplesInWordsRus(parseFloat(chislo)) + "), НДС не облагается";
+	gsmas [2] = Kopcislo(parseFloat(chislo));
+	gsmas [3] = Kopnew(parseFloat(chislo)); 
+	gsmas [4] = "("+ FloatToSamplesInWordsRus(parseFloat(chislo)) + "), НДС не облагается";
 	return gsmas.join(" ");
-	}357.50
+		}
 	
 	
 	if ($('#sel1').val() == "10") {
 	 var sumnds = (chislo / "110")*"10" ;
 	 var gsmas = [];
-	 gsmas [0] = parseFloat(chislo).toFixed(2).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');	
-	 gsmas [1] = rubnew(parseFloat(chislo));
-	 gsmas [2] = "("+ FloatToSamplesInWordsRus(parseFloat(chislo)) + "), в том числе НДС 10%";
-	 gsmas [3] = parseFloat(sumnds).toFixed(2).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
-	 gsmas [4] = rubnew(parseFloat(sumnds));
-	 gsmas [5] = "("+ FloatToSamplesInWordsRus(parseFloat(sumnds)) + ")";
+	gsmas [0] = String (((Math.trunc(parseFloat(chislo).toFixed(2))))).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+	gsmas [1] = rubnew(parseFloat(chislo));
+	gsmas [2] = Kopcislo(parseFloat(chislo));
+	gsmas [3] = Kopnew(parseFloat(chislo)); 
+	 
+	gsmas [4] = "("+ FloatToSamplesInWordsRus(parseFloat(chislo)) + "), в том числе НДС 10%";
+	 	 
+	gsmas [5] = String (((Math.trunc(parseFloat(sumnds).toFixed(2))))).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+	gsmas [6] = rubnew(parseFloat(sumnds));
+	gsmas [7] = Kopcislo(parseFloat(sumnds));
+	gsmas [8] = Kopnew(parseFloat(sumnds)); 
+	gsmas [9] = "("+ FloatToSamplesInWordsRus(parseFloat(sumnds)) + ")";
+	
      return gsmas.join(" ");	 
 	}
 	
@@ -235,25 +345,39 @@ function rubnew(fAmount)
 	if ($('#sel1').val() == "18") {
 	 var sumnds = (chislo / "118")*"18" ;
 	 var gsmas = [];
-	 gsmas [0] = parseFloat(chislo).toFixed(2).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');	
-	 gsmas [1] = rubnew(parseFloat(chislo));
-	 gsmas [2] = "("+ FloatToSamplesInWordsRus(parseFloat(chislo)) + "), в том числе НДС 18%";
-	 gsmas [3] = parseFloat(sumnds).toFixed(2).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
-	 gsmas [4] = rubnew(parseFloat(sumnds));
-	 gsmas [5] = "("+ FloatToSamplesInWordsRus(parseFloat(sumnds)) + ")";
-     return gsmas.join(" ");	 
+	gsmas [0] = String (((Math.trunc(parseFloat(chislo).toFixed(2))))).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+	gsmas [1] = rubnew(parseFloat(chislo));
+	gsmas [2] = Kopcislo(parseFloat(chislo));
+	gsmas [3] = Kopnew(parseFloat(chislo)); 
+	 
+	gsmas [4] = "("+ FloatToSamplesInWordsRus(parseFloat(chislo)) + "), в том числе НДС 18%";
+	 	 
+	gsmas [5] = String (((Math.trunc(parseFloat(sumnds).toFixed(2))))).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+	gsmas [6] = rubnew(parseFloat(sumnds));
+	gsmas [7] = Kopcislo(parseFloat(sumnds));
+	gsmas [8] = Kopnew(parseFloat(sumnds)); 
+	gsmas [9] = "("+ FloatToSamplesInWordsRus(parseFloat(sumnds)) + ")";
+	
+     return gsmas.join(" "); 
 	}
 	
 	if ($('#sel1').val() == "20") {
 	 var sumnds = (chislo / "120")*"20" ;
 	 var gsmas = [];
-	 gsmas [0] = parseFloat(chislo).toFixed(2).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');	
-	 gsmas [1] = rubnew(parseFloat(chislo));
-	 gsmas [2] = "("+ FloatToSamplesInWordsRus(parseFloat(chislo)) + "), в том числе НДС 20%";
-	 gsmas [3] = parseFloat(sumnds).toFixed(2).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
-	 gsmas [4] = rubnew(parseFloat(sumnds));
-	 gsmas [5] = "("+ FloatToSamplesInWordsRus(parseFloat(sumnds)) + ")";
-     return gsmas.join(" ");	 
+	gsmas [0] = String (((Math.trunc(parseFloat(chislo).toFixed(2))))).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+	gsmas [1] = rubnew(parseFloat(chislo));
+	gsmas [2] = Kopcislo(parseFloat(chislo));
+	gsmas [3] = Kopnew(parseFloat(chislo)); 
+	 
+	gsmas [4] = "("+ FloatToSamplesInWordsRus(parseFloat(chislo)) + "), в том числе НДС 20%";
+	 	 
+	gsmas [5] = String (((Math.trunc(parseFloat(sumnds).toFixed(2))))).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+	gsmas [6] = rubnew(parseFloat(sumnds));
+	gsmas [7] = Kopcislo(parseFloat(sumnds));
+	gsmas [8] = Kopnew(parseFloat(sumnds)); 
+	gsmas [9] = "("+ FloatToSamplesInWordsRus(parseFloat(sumnds)) + ")";
+	
+     return gsmas.join(" ");  
 	}
 		
 	}
@@ -265,9 +389,12 @@ function rubnew(fAmount)
 	sumprocent = chislo * (procent / '100').toFixed(2);
 		
 	var sumpropmas = [];
-	sumpropmas [0] = parseFloat(sumprocent).toFixed(2).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');	
+			
+	sumpropmas [0] = String (((Math.trunc(parseFloat(sumprocent).toFixed(2))))).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
 	sumpropmas [1] = rubnew(parseFloat(sumprocent));
-	sumpropmas [2] = "("+ FloatToSamplesInWordsRus(parseFloat(sumprocent)) + ")";
+	sumpropmas [2] = Kopcislo(parseFloat(sumprocent));
+	sumpropmas [3] = Kopnew(parseFloat(sumprocent)); 
+	sumpropmas [4] = "("+ FloatToSamplesInWordsRus(parseFloat(sumprocent)) + ")";
 	return sumpropmas.join(" ");
 	}
 		
@@ -280,9 +407,12 @@ function rubnew(fAmount)
 	chislo = parseFloat(chislo).toFixed(2);	
 		
 	var sumpropmas = [];
-	sumpropmas [0] = parseFloat(chislo).toFixed(2).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');	
+			
+	sumpropmas [0] = String (((Math.trunc(parseFloat(chislo).toFixed(2))))).split('.').join(',').replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
 	sumpropmas [1] = rubnew(parseFloat(chislo));
-	sumpropmas [2] = "("+ FloatToSamplesInWordsRus(parseFloat(chislo)) + ")";
+	sumpropmas [2] = Kopcislo(parseFloat(chislo));
+	sumpropmas [3] = Kopnew(parseFloat(chislo)); 
+	sumpropmas [4] = "("+ FloatToSamplesInWordsRus(parseFloat(chislo)) + ")";
 	return sumpropmas.join(" ");
 	}
 		
@@ -305,9 +435,6 @@ function rubnew(fAmount)
 	$('#pro2').val($('#pro2').val().split('.').join(','));
     $('#pro2').val($('#pro2').val().split(',,').join(','));		
 		
-	$('#pro3').val($('#pro3').val().split('.').join(','));
-    $('#pro3').val($('#pro3').val().split(',,').join(','));	
-
 
 	
 	
@@ -332,12 +459,7 @@ function rubnew(fAmount)
 	$('#pro2').val($('#pro2').val().split('   ').join(''));
 	$('#pro2').val($('#pro2').val().split('    ').join(''));
 	
-    $('#pro3').val($('#pro3').val().split(' ').join(''));
-	$('#pro3').val($('#pro3').val().split('  ').join(''));
-	$('#pro3').val($('#pro3').val().split('   ').join(''));
-	$('#pro3').val($('#pro3').val().split('    ').join(''));
-		
-
+ 
 	
 	
 	
@@ -350,9 +472,7 @@ function rubnew(fAmount)
 	proc2 = $('#pro2').val().split(',').join('.');
 	proc2 = parseFloat(proc2).toFixed(2);
 	
-	proc3 = $('#pro3').val().split(',').join('.');
-	proc3 = parseFloat(proc3).toFixed(2);
-	
+
 	
 	
 	//сумма прописью
@@ -364,7 +484,7 @@ function rubnew(fAmount)
 	//проценты
 	$('#res4').val(procent(summanew, proc1));
 	$('#res5').val(procent(summanew, proc2));
-	$('#res6').val(procent(summanew, proc3));
+	
 	
 	
 	
@@ -383,10 +503,15 @@ function rubnew(fAmount)
 	$('#in1').val($('#in1').val().replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 '));
 	$('#pro1').val($('#pro1').val().replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 '));	
 	$('#pro2').val($('#pro2').val().replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 '));	
-	$('#pro3').val($('#pro3').val().replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 '));	
+	//$('#pro3').val($('#pro3').val().replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 '));	
 	$('#sum1').val($('#sum1').val().replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 '));	
 		
-		
+	
+
+    // Удалить пробелы
+	
+	$('#delprob').val($('#delprob').val().replace(/\s+/g, ''));
+	
 	}
 
 
@@ -423,7 +548,7 @@ jQuery('Document').ready(function(){
 	$('#in1').val('0,00');
 	$('#pro1').val(localStorage.getItem('pro1'));
 	$('#pro2').val(localStorage.getItem('pro2'));
-	$('#pro3').val(localStorage.getItem('pro3'));
+
 	$('#sum1').val(localStorage.getItem('sum1'));
 	
 	if ($('#pro1').val() == "") {
@@ -433,11 +558,7 @@ jQuery('Document').ready(function(){
 	if ($('#pro2').val() == "") {
 	$('#pro2').val('5');
 	}
-	
-	if ($('#pro3').val() == "") {
-	$('#pro3').val('10');
-	}
-	
+
 	if ($('#sum1').val() == "") {
 	$('#sum1').val('1000');
 	}
@@ -462,8 +583,7 @@ jQuery('Document').ready(function(){
 	localStorage.setItem("pro2", $('#pro2').val());
 	console.log(localStorage.getItem("pro2"));	
 	
-    localStorage.setItem("pro3", $('#pro3').val());
-	console.log(localStorage.getItem("pro3"));		
+	
 	
 	localStorage.setItem("sum1", $('#sum1').val());
 	console.log(localStorage.getItem("sum1"));	
